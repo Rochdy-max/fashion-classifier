@@ -1,21 +1,13 @@
-from classifier import ClassifierNetwork
+import os
+import sys
 import tensorflow as tf
 import random
 import matplotlib.pyplot as plt
+from classifier import ClassifierNetwork
 
-# Map a numerical key to its corresponding label string in fashion MNIST dataset
-labels_map = {
-    0: 'T-Shirt',
-    1: 'Trouser',
-    2: 'Pullover',
-    3: 'Dress',
-    4: 'Coat',
-    5: 'Sandal',
-    6: 'Shirt',
-    7: 'Sneaker',
-    8: 'Bag',
-    9: 'Ankle Boot'
-}
+labels_map_directory = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(labels_map_directory)
+from labels_map import labels_map
 
 # Load fashion MNIST data from keras' datasets
 (training_images, training_labels), (test_images, test_labels) = tf.keras.datasets.fashion_mnist.load_data()
