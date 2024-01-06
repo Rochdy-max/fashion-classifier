@@ -57,6 +57,9 @@ def build_datasets():
 
 def main():
     train_dataset, test_dataset = build_datasets()
+    model = ClassifierNetwork()
+    model.build((1, 28, 28))
+    model.summary()
 
 if __name__ == "__main__":
     main()
