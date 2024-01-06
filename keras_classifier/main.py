@@ -94,5 +94,12 @@ def main():
     print('\nCompiling:')
     compile_model(model, learning_rate)
 
+    print('\nFitting:')
+    model.fit(train_dataset, epochs=epochs)
+
+    print('\nEvaluating:')
+    (test_loss, test_accuracy) = model.evaluate(test_dataset)
+    print(f"\nTest Accuracy: {test_accuracy * 100:>0.1f}%, Test Loss: {test_loss:>0.8f}")
+
 if __name__ == "__main__":
     main()
