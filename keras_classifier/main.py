@@ -49,12 +49,12 @@ def explore_data(images, labels):
     print()
     print('Label:\n', labels_map[labels[0]])
     
-def build_datasets():
+def build_datasets(batch_size):
     """
     Build one dataset for model training and another for testing from loaded data
     Here are some specifications of these datasets:
     - Images contain floating point values between 0 and 1 instead of unsigned int values between 0 and 255
-    - Their batch size is set to 64 so that iterating over these datasets provides this number of items
+    - Their batch size is set to 64 so that iterating over these datasets provides this number of items (only one batch is stored in memory)
     """
     train_dataset = tf.data.Dataset.from_tensor_slices((training_images, training_labels))
     test_dataset = tf.data.Dataset.from_tensor_slices((test_images, test_labels))
@@ -65,16 +65,34 @@ def build_datasets():
     # print(image)
     # print(labels_map[label_key])
     
-    batch_size = 64
     train_dataset = train_dataset.batch(batch_size).shuffle(len(train_dataset))
     test_dataset = test_dataset.batch(batch_size).shuffle(len(test_dataset))
     return train_dataset, test_dataset
 
+def compile_model(model, learning_rate = 0.01):
+    """
+    Compile model with SparseCategoricalCrossentropy as loss function and Stochastic Gradient Descent as optimizer
+    """
+    # *from_logits*'s value specify that a softmax must be applied to y_hat before computing
+    # the loss as categorical cross entropy requires a probability distribution (values between 0 and 1, adding up to 1)
+    loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+
+    optimizer = tf.keras.optimizers.SGD(learning_rate)
+
+    # Metrics to report during training
+    metrics = ['accuracy']
+
+    model.compile(optimizer, loss_fn, metrics)
+
 def main():
-    train_dataset, test_dataset = build_datasets()
+    batch_size = 64
+    train_dataset, test_dataset = build_datasets(batch_size)
     model = ClassifierNetwork()
-    model.build((1, 28, 28))
-    model.summary()
+    epochs = 5
+    learning_rate = 0.1
+
+    print('\nCompiling:')
+    compile_model(model, learning_rate)
 
 if __name__ == "__main__":
     main()
