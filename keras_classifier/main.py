@@ -3,6 +3,7 @@ import tensorflow as tf
 import random
 import matplotlib.pyplot as plt
 
+# Map a numerical key to its corresponding label string in fashion MNIST dataset
 labels_map = {
     0: 'T-Shirt',
     1: 'Trouser',
@@ -16,11 +17,13 @@ labels_map = {
     9: 'Ankle Boot'
 }
 
+# Load fashion MNIST data from keras' datasets
 (training_images, training_labels), (test_images, test_labels) = tf.keras.datasets.fashion_mnist.load_data()
 
-def display_sample(images, labels):
-    cols = 3
-    rows = 3
+def display_sample(images, labels, rows = 3, cols = 3):
+    """
+    Graphically display a sample of images with their labels in a grid of rows*cols size
+    """
     figure = plt.figure(figsize=(6, 6))
     
     for i in range(1, cols * rows + 1):
@@ -34,6 +37,12 @@ def display_sample(images, labels):
     plt.show()
 
 def explore_data(images, labels):
+    """
+    Provide a simple exploration of data consisting of:
+    - graphical displaying of images and labels
+    - console displaying of first image in *images*
+    - console displaying of its label from *labels*
+    """
     display_sample(images, labels)
     print()
     print('Image:\n', images[0])
@@ -41,6 +50,12 @@ def explore_data(images, labels):
     print('Label:\n', labels_map[labels[0]])
     
 def build_datasets():
+    """
+    Build one dataset for model training and another for testing from loaded data
+    Here are some specifications of these datasets:
+    - Images contain floating point values between 0 and 1 instead of unsigned int values between 0 and 255
+    - Their batch size is set to 64 so that iterating over these datasets provides this number of items
+    """
     train_dataset = tf.data.Dataset.from_tensor_slices((training_images, training_labels))
     test_dataset = tf.data.Dataset.from_tensor_slices((test_images, test_labels))
     
