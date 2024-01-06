@@ -39,9 +39,24 @@ def explore_data(images, labels):
     print('Image:\n', images[0])
     print()
     print('Label:\n', labels_map[labels[0]])
+    
+def build_datasets():
+    train_dataset = tf.data.Dataset.from_tensor_slices((training_images, training_labels))
+    test_dataset = tf.data.Dataset.from_tensor_slices((test_images, test_labels))
+    
+    train_dataset = train_dataset.map(lambda image, label: (float(image) / 255.0, label))
+    test_dataset = test_dataset.map(lambda image, label: (float(image) / 255.0, label))
+    # image, label_key = train_dataset.as_numpy_iterator().next()
+    # print(image)
+    # print(labels_map[label_key])
+    
+    batch_size = 64
+    train_dataset = train_dataset.batch(batch_size).shuffle(len(train_dataset))
+    test_dataset = test_dataset.batch(batch_size).shuffle(len(test_dataset))
+    return train_dataset, test_dataset
 
 def main():
-    explore_data(training_images, training_labels)
+    train_dataset, test_dataset = build_datasets()
 
 if __name__ == "__main__":
     main()
